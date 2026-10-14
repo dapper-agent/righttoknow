@@ -82,6 +82,16 @@ RSpec.describe 'Donate redirect', type: :request do
       expect(response.body).to include('utm_content=footer')
     end
 
+    it 'leaves out the About and Credits donate links when DONATION_URL is blank' do
+      stub_donation_url('')
+
+      get '/help/about'
+      expect(response.body).not_to include('utm_content=about')
+
+      get '/help/credits'
+      expect(response.body).not_to include('utm_content=credits')
+    end
+
     it 'leaves out the footer donate button when DONATION_URL is blank' do
       stub_donation_url('')
 
