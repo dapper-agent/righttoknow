@@ -12,25 +12,35 @@ require File.expand_path(
 require File.expand_path('support/announcement_factory', __dir__)
 
 RSpec.describe AnnouncementStyleHelper, type: :helper do
-  include AnnouncementStyleHelper
-
   describe '#announcement_as_html' do
     let(:announcement) do
       FactoryBot.build(:announcement, rich_body: '<b>Exciting news!</b>')
     end
 
-    it { expect(announcement_as_html(announcement)).to eq('<b>Exciting news!</b>') }
+    it { expect(helper.announcement_as_html(announcement)).to eq('<b>Exciting news!</b>') }
 
     it 'strips out dangerous tags' do
       announcement.rich_body = '<b>Hi</b><script>alert("!")</script>'
-      expect(announcement_as_html(announcement)).not_to include('<script>')
+      expect(helper.announcement_as_html(announcement)).not_to include('<script>')
+    end
+
+    it 'renders attachments added in the editor' do
+      blob = ActiveStorage::Blob.create_and_upload!(
+        io: StringIO.new("\x89PNG\r\n\x1a\n"),
+        filename: 'logo.png',
+        content_type: 'image/png'
+      )
+      attachment = ActionText::Attachment.from_attachable(blob)
+      announcement.rich_body = "<div>Hi #{attachment.to_html}</div>"
+
+      expect(helper.announcement_as_html(announcement)).to include('<img', 'logo.png')
     end
   end
 
   describe '#announcement_style_class' do
     it 'returns a class for the style' do
       announcement = FactoryBot.build(:announcement, style: 'red')
-      expect(announcement_style_class(announcement))
+      expect(helper.announcement_style_class(announcement))
         .to eq('announcement--style-red')
     end
   end
@@ -45,7 +55,7 @@ RSpec.describe AnnouncementStyleHelper, type: :helper do
     }.each do |style, alert_class|
       it "maps #{style} to #{alert_class}" do
         announcement = FactoryBot.build(:announcement, style: style)
-        expect(announcement_admin_alert_class(announcement)).to eq(alert_class)
+        expect(helper.announcement_admin_alert_class(announcement)).to eq(alert_class)
       end
     end
   end

@@ -9,8 +9,10 @@ module AnnouncementStyleHelper
     'green' => 'alert-success'
   }.freeze
 
+  # ActionText's display path, so attachments added in the editor render
+  # instead of being stripped by the default sanitiser.
   def announcement_as_html(announcement)
-    sanitize(announcement.rich_body.to_trix_html)
+    render_action_text_content(announcement.rich_body.body)
   end
 
   def announcement_style_class(announcement)

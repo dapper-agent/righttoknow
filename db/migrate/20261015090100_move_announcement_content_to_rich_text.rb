@@ -26,7 +26,8 @@ class MoveAnnouncementContentToRichText < ActiveRecord::Migration[8.0]
     SQL
   end
 
-  # Only announcements written since the move have no `content` to go back to.
+  # Copies the current body back over `content`, including any edits made since
+  # the move, before the rich text rows are removed.
   def down
     execute <<~SQL
       UPDATE announcement_translations t
@@ -35,7 +36,6 @@ class MoveAnnouncementContentToRichText < ActiveRecord::Migration[8.0]
       WHERE r.record_type = '#{RECORD_TYPE}'
         AND r.record_id = t.id
         AND r.name = 'rich_body'
-        AND (t.content IS NULL OR t.content = '')
     SQL
 
     execute <<~SQL
