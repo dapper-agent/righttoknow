@@ -12,7 +12,10 @@ module AnnouncementStyleHelper
   # ActionText's display path, so attachments added in the editor render
   # instead of being stripped by the default sanitiser.
   def announcement_as_html(announcement)
-    render_action_text_content(announcement.rich_body.body)
+    body = announcement.rich_body.body
+    return ''.html_safe if body.nil?
+
+    render_action_text_content(body)
   end
 
   def announcement_style_class(announcement)

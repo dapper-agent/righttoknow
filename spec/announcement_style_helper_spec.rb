@@ -24,6 +24,12 @@ RSpec.describe AnnouncementStyleHelper, type: :helper do
       expect(helper.announcement_as_html(announcement)).not_to include('<script>')
     end
 
+    it 'renders nothing when there is no rich body yet' do
+      announcement = FactoryBot.build(:announcement)
+      announcement.translation.rich_body = nil
+      expect(helper.announcement_as_html(announcement)).to eq('')
+    end
+
     it 'renders attachments added in the editor' do
       blob = ActiveStorage::Blob.create_and_upload!(
         io: StringIO.new("\x89PNG\r\n\x1a\n"),
