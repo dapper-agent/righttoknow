@@ -7,11 +7,14 @@ staging→production release pull request). Each bullet is one merged pull
 request, credited to its author. Update this file as part of each release PR,
 covering everything merged to `staging` since the previous release.
 
-## 2026-10-14 (release #1124)
+## 2026-10-20 (release #1132)
 
 * Adopt canonical Sentry configuration and release tracking (Ben Fairless,
   #1103)
 * Add tagged /donate redirect to Raisely (Ben Fairless, #1122)
+* Backport announcement styles and rich text from upstream pull request 9644
+  (Ben Fairless, #1128)
+* Fix announcement banner layout and nil body (Ben Fairless, #1131)
 
 ## 2026-09-25 (release #1117)
 
