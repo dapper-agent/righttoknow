@@ -9,6 +9,15 @@ $announcement-palette: (
   blue:   (text: darken($primary-color, 15%), bg: lighten($primary-color, 60%), border: $primary-color)
 );
 
+// The body is ActionText output: a `<div>` per line, sitting directly inside
+// `.popup__content` (there is no `.trix-content` wrapper on public pages).
+// A div is a block and would push the bold title onto its own line, so run the
+// first one inline and "Title - body" flows as it did before the body became
+// rich text. Later lines and lists stay as blocks.
+.popup__content > div:first-of-type {
+  display: inline;
+}
+
 @each $style, $colours in $announcement-palette {
   // Two classes, to beat the `.popup` and `.popup a` rules in custom.scss.
   .popup.announcement--style-#{$style} {
